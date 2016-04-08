@@ -35,7 +35,7 @@ public class ArvoreBinariaBusca {
     /**
      * Método que verifica se a árvore contém um dado conteúdo via busca eRd.
      * @param arvore
-     * @return
+     * @return booleano que informa se dado inteiro está ou não presente na árvore.
      */
     public boolean contem(Integer c) {
         boolean encontrado = false;
@@ -56,6 +56,12 @@ public class ArvoreBinariaBusca {
         return encontrado;
     }
 
+    /**
+     * Insere um valor na árvore. Não é permitida a inserção de valores já presentes na árvore.
+     * @param valor a ser inserido.
+     * @return raiz da árvore.
+     * @throws ValorPresenteException exceção lançada quando o valor a ser inserido já está na árvore.
+     */
     public ArvoreBinariaBusca inserir(Integer valor) throws ValorPresenteException {
         ArvoreBinariaBusca anterior = this;
         ArvoreBinariaBusca cursor = this;
