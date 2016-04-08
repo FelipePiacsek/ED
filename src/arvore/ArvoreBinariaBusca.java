@@ -14,12 +14,6 @@ public class ArvoreBinariaBusca {
 
     private Integer valor;
 
-    public ArvoreBinariaBusca(ArvoreBinariaBusca arvore) {
-        this.valor = arvore.valor;
-        this.esquerda = arvore.esquerda;
-        this.direita = arvore.direita;
-    }
-
     public ArvoreBinariaBusca(Integer valor) {
         this.valor = valor;
         this.esquerda = null;
