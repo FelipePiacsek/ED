@@ -84,4 +84,82 @@ public class ArvoreBinariaBusca {
         }
         return this;
     }
+
+    /**
+     * Remove um nó da árvore, mantendo as propriedades de uma Árvore Binária de Busca.
+     * @param no nó a ser removido da árvore.
+     * @return
+     * @throws ArvoreNaoExistenteException Se o nó da árvore não estiver presente, lança exception.
+     */
+    public ArvoreBinariaBusca remover(ArvoreBinariaBusca no) throws ArvoreNaoExistenteException {
+
+        boolean existe = this.equals(no);
+        ArvoreBinariaBusca cursor = this;
+        ArvoreBinariaBusca anteriorCursor = this;
+
+        Stack<ArvoreBinariaBusca> pilha = new Stack<ArvoreBinariaBusca>();
+        do {
+            if (!existe && !pilha.isEmpty()) {
+                cursor = pilha.pop();
+                anteriorCursor = cursor;
+                cursor = cursor.getDireita();
+            }
+            while (!existe && cursor != null) {
+                pilha.push(cursor);
+                existe = cursor.equals(no);
+                if (!existe) {
+                    anteriorCursor = cursor;
+                    cursor = cursor.getEsquerda();
+                }
+            }
+        } while (!existe && !pilha.isEmpty());
+
+        if (!existe) {
+            throw new ArvoreNaoExistenteException(no.valor);
+        }
+        ArvoreBinariaBusca paiMaiorDentreMenores = obterPaiMaiorDentreMenores(cursor);
+        ArvoreBinariaBusca maiorDentreMenores = paiMaiorDentreMenores.direita;
+        paiMaiorDentreMenores.direita = maiorDentreMenores.esquerda;
+
+        maiorDentreMenores.direita = cursor.direita;
+        maiorDentreMenores.esquerda = cursor.esquerda;
+
+        if (anteriorCursor.valor > maiorDentreMenores.valor) {
+            anteriorCursor.esquerda = maiorDentreMenores;
+        } else {
+            anteriorCursor.direita = maiorDentreMenores;
+        }
+
+        return this;
+    }
+
+    private ArvoreBinariaBusca obterPaiMaiorDentreMenores(ArvoreBinariaBusca no) {
+        ArvoreBinariaBusca cursor = no.esquerda;
+        while (cursor != null && cursor.direita != null && cursor.direita.direita != null) {
+            cursor = cursor.direita;
+        }
+        return cursor;
+    }
+
+    public String eRd() {
+        ArvoreBinariaBusca cursor = this;
+        StringBuilder erd = new StringBuilder(cursor.valor);
+        Stack<ArvoreBinariaBusca> pilha = new Stack<ArvoreBinariaBusca>();
+        do {
+            if (!pilha.isEmpty()) {
+                cursor = pilha.pop();
+                cursor = cursor.getDireita();
+            }
+            while (cursor != null) {
+                pilha.push(cursor);
+                cursor = cursor.getEsquerda();
+            }
+        } while (!pilha.isEmpty());
+        return erd.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((ArvoreBinariaBusca) obj).valor == this.valor;
+    }
 }
