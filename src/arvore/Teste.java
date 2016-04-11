@@ -1,18 +1,22 @@
 package arvore;
 
+import java.util.List;
+
 public class Teste {
 
     public static void main(String[] args) {
         int[] mockContent = {50, 80, 90, 85, 75, 77, 78, 79, 60, 0, 12, 150, 125};
         ArvoreBinariaBusca arvore = testeInsercao(100, mockContent);
-        ArvoreBinariaBusca no = new ArvoreBinariaBusca(50);
-        System.out.println(arvore.eRd());
         try {
-            arvore.remover(no);
+            final List<ArvoreBinariaBusca> all = arvore.todos();
+            for (ArvoreBinariaBusca a : all) {
+                System.out.println(arvore.eRd());
+                System.out.println("Removendo " + a.getValor());
+                arvore.remover(a);
+            }
         } catch (ArvoreNaoExistenteException e) {
             System.err.println(e.getMessage());
         }
-        System.out.println(arvore.eRd());
 
     }
 

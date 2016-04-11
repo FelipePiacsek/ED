@@ -1,5 +1,7 @@
 package arvore;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -63,6 +65,10 @@ public class ArvoreBinariaBusca {
      * @throws ValorPresenteException exceção lançada quando o valor a ser inserido já está na árvore.
      */
     public ArvoreBinariaBusca inserir(Integer valor) throws ValorPresenteException {
+        if (this.valor == null) {
+            this.valor = valor;
+            return this;
+        }
         ArvoreBinariaBusca anterior = this;
         ArvoreBinariaBusca cursor = this;
         while (cursor != null) {
@@ -94,6 +100,18 @@ public class ArvoreBinariaBusca {
     public ArvoreBinariaBusca remover(ArvoreBinariaBusca no) throws ArvoreNaoExistenteException {
 
         boolean existe = this.equals(no);
+        if (existe) {
+            if (direita != null) {
+                this.valor = direita.valor;
+                this.esquerda = direita.esquerda;
+                this.direita = direita.direita;
+            } else {
+                this.valor = null;
+                this.esquerda = null;
+                this.direita = null;
+            }
+            return this;
+        }
         ArvoreBinariaBusca cursor = this;
         ArvoreBinariaBusca anteriorCursor = this;
 
@@ -117,17 +135,27 @@ public class ArvoreBinariaBusca {
         if (!existe) {
             throw new ArvoreNaoExistenteException(no.valor);
         }
+        ArvoreBinariaBusca substituto = cursor.direita;
         ArvoreBinariaBusca paiMaiorDentreMenores = obterPaiMaiorDentreMenores(cursor);
-        ArvoreBinariaBusca maiorDentreMenores = paiMaiorDentreMenores.direita;
-        paiMaiorDentreMenores.direita = maiorDentreMenores.esquerda;
+        if (paiMaiorDentreMenores != null) {
+            substituto = paiMaiorDentreMenores.direita;
+            paiMaiorDentreMenores.direita = substituto.esquerda;
+            substituto.direita = cursor.direita;
+            substituto.esquerda = cursor.esquerda;
+        }
 
-        maiorDentreMenores.direita = cursor.direita;
-        maiorDentreMenores.esquerda = cursor.esquerda;
-
-        if (anteriorCursor.valor > maiorDentreMenores.valor) {
-            anteriorCursor.esquerda = maiorDentreMenores;
+        if (substituto != null) {
+            if (anteriorCursor.valor > substituto.valor) {
+                anteriorCursor.esquerda = substituto;
+            } else {
+                anteriorCursor.direita = substituto;
+            }
         } else {
-            anteriorCursor.direita = maiorDentreMenores;
+            if (anteriorCursor.valor > no.valor) {
+                anteriorCursor.esquerda = null;
+            } else {
+                anteriorCursor.direita = null;
+            }
         }
 
         return this;
@@ -158,6 +186,52 @@ public class ArvoreBinariaBusca {
             }
         } while (!pilha.isEmpty());
         return erd.toString();
+    }
+
+    public List<ArvoreBinariaBusca> todos() {
+        ArvoreBinariaBusca cursor = this;
+        List<ArvoreBinariaBusca> erdList = new ArrayList<ArvoreBinariaBusca>();
+        Stack<ArvoreBinariaBusca> pilha = new Stack<ArvoreBinariaBusca>();
+        do {
+            if (!pilha.isEmpty()) {
+                cursor = pilha.pop();
+                erdList.add(cursor);
+                cursor = cursor.getDireita();
+            }
+            while (cursor != null) {
+                pilha.push(cursor);
+                cursor = cursor.getEsquerda();
+            }
+        } while (!pilha.isEmpty());
+        return erdList;
+    }
+
+    public Integer quantidadeNos() {
+        Integer quantidade = 0;
+        ArvoreBinariaBusca cursor = this;
+        Stack<ArvoreBinariaBusca> pilha = new Stack<ArvoreBinariaBusca>();
+        do {
+            if (!pilha.isEmpty()) {
+                cursor = pilha.pop();
+                quantidade++;
+                cursor = cursor.getDireita();
+            }
+            while (cursor != null) {
+                if (cursor.valor != null) {
+                    pilha.push(cursor);
+                }
+                cursor = cursor.getEsquerda();
+            }
+        } while (!pilha.isEmpty());
+        return quantidade;
+    }
+
+    public boolean vazia() {
+        return this.valor == null;
+    }
+
+    public boolean folha() {
+        return this.esquerda == null && this.direita == null;
     }
 
     @Override
