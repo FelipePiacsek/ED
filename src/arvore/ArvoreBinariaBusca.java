@@ -148,6 +148,8 @@ public class ArvoreBinariaBusca {
         do {
             if (!pilha.isEmpty()) {
                 cursor = pilha.pop();
+                erd.append(cursor.valor);
+                erd.append("  ");
                 cursor = cursor.getDireita();
             }
             while (cursor != null) {

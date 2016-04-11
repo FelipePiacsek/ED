@@ -5,13 +5,14 @@ public class Teste {
     public static void main(String[] args) {
         int[] mockContent = {50, 80, 90, 85, 75, 77, 78, 79, 60, 0, 12, 150, 125};
         ArvoreBinariaBusca arvore = testeInsercao(100, mockContent);
-        ArvoreBinariaBusca no = arvore.getEsquerda().getDireita();
+        ArvoreBinariaBusca no = new ArvoreBinariaBusca(50);
+        System.out.println(arvore.eRd());
         try {
             arvore.remover(no);
         } catch (ArvoreNaoExistenteException e) {
             System.err.println(e.getMessage());
         }
-        System.out.println(arvore.contem(80));
+        System.out.println(arvore.eRd());
 
     }
 
