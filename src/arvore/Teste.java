@@ -1,5 +1,6 @@
 package arvore;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Teste {
@@ -9,6 +10,7 @@ public class Teste {
         ArvoreBinariaBusca arvore = testeInsercao(100, mockContent);
         try {
             final List<ArvoreBinariaBusca> all = arvore.todos();
+            Collections.reverse(all);
             for (ArvoreBinariaBusca a : all) {
                 System.out.println(arvore.eRd());
                 System.out.println("Removendo " + a.getValor());

@@ -105,12 +105,13 @@ public class ArvoreBinariaBusca {
                 this.valor = direita.valor;
                 this.esquerda = direita.esquerda;
                 this.direita = direita.direita;
-            } else {
+                return this;
+            } else if (esquerda == null) {
                 this.valor = null;
                 this.esquerda = null;
                 this.direita = null;
+                return this;
             }
-            return this;
         }
         ArvoreBinariaBusca cursor = this;
         ArvoreBinariaBusca anteriorCursor = this;
@@ -138,14 +139,22 @@ public class ArvoreBinariaBusca {
         ArvoreBinariaBusca substituto = cursor.direita;
         ArvoreBinariaBusca paiMaiorDentreMenores = obterPaiMaiorDentreMenores(cursor);
         if (paiMaiorDentreMenores != null) {
-            substituto = paiMaiorDentreMenores.direita;
-            paiMaiorDentreMenores.direita = substituto.esquerda;
-            substituto.direita = cursor.direita;
-            substituto.esquerda = cursor.esquerda;
+            if (paiMaiorDentreMenores.direita != null) {
+                substituto = paiMaiorDentreMenores.direita;
+                paiMaiorDentreMenores.direita = substituto.esquerda;
+                substituto.direita = cursor.direita;
+                substituto.esquerda = cursor.esquerda;
+            } else {
+                substituto = paiMaiorDentreMenores;
+            }
         }
 
         if (substituto != null) {
-            if (anteriorCursor.valor > substituto.valor) {
+            if (anteriorCursor.valor.equals(no.valor)) {
+                this.valor = substituto.valor;
+                this.esquerda = substituto.esquerda;
+                this.direita = substituto.direita;
+            } else if (anteriorCursor.valor > substituto.valor) {
                 anteriorCursor.esquerda = substituto;
             } else {
                 anteriorCursor.direita = substituto;
@@ -170,6 +179,9 @@ public class ArvoreBinariaBusca {
     }
 
     public String eRd() {
+        if (this.valor == null) {
+            return "";
+        }
         ArvoreBinariaBusca cursor = this;
         StringBuilder erd = new StringBuilder(cursor.valor);
         Stack<ArvoreBinariaBusca> pilha = new Stack<ArvoreBinariaBusca>();
@@ -234,8 +246,15 @@ public class ArvoreBinariaBusca {
         return this.esquerda == null && this.direita == null;
     }
 
+    public void esvaziar() {
+        this.valor = null;
+        this.esquerda = null;
+        this.direita = null;
+    }
+
     @Override
     public boolean equals(Object obj) {
-        return ((ArvoreBinariaBusca) obj).valor == this.valor;
+        final Integer v = ((ArvoreBinariaBusca) obj).valor;
+        return v != null && this.valor != null && v == this.valor;
     }
 }
