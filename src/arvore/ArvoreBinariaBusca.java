@@ -64,14 +64,15 @@ public class ArvoreBinariaBusca {
      * @return raiz da árvore.
      * @throws ValorPresenteException exceção lançada quando o valor a ser inserido já está na árvore.
      */
-    public ArvoreBinariaBusca inserir(Integer valor) throws ValorPresenteException {
+    public ArvoreBinariaBusca inserir(Integer valor) {
         if (this.valor == null) {
             this.valor = valor;
             return this;
         }
+        boolean existe = false;
         ArvoreBinariaBusca anterior = this;
         ArvoreBinariaBusca cursor = this;
-        while (cursor != null) {
+        while (cursor != null && !existe) {
             if (valor < cursor.valor) {
                 anterior = cursor;
                 cursor = cursor.esquerda;
@@ -79,14 +80,16 @@ public class ArvoreBinariaBusca {
                 anterior = cursor;
                 cursor = cursor.direita;
             } else {
-                throw new ValorPresenteException(valor);
+                existe = true;
             }
         }
-        ArvoreBinariaBusca novoNo = new ArvoreBinariaBusca(valor);
-        if (anterior.valor < valor) {
-            anterior.direita = novoNo;
-        } else {
-            anterior.esquerda = novoNo;
+        if (!existe) {
+            ArvoreBinariaBusca novoNo = new ArvoreBinariaBusca(valor);
+            if (anterior.valor < valor) {
+                anterior.direita = novoNo;
+            } else {
+                anterior.esquerda = novoNo;
+            }
         }
         return this;
     }
@@ -97,7 +100,7 @@ public class ArvoreBinariaBusca {
      * @return
      * @throws ArvoreNaoExistenteException Se o nó da árvore não estiver presente, lança exception.
      */
-    public ArvoreBinariaBusca remover(ArvoreBinariaBusca no) throws ArvoreNaoExistenteException {
+    public ArvoreBinariaBusca remover(ArvoreBinariaBusca no) {
 
         boolean existe = this.equals(no);
         if (existe) {
@@ -133,37 +136,36 @@ public class ArvoreBinariaBusca {
             }
         } while (!existe && !pilha.isEmpty());
 
-        if (!existe) {
-            throw new ArvoreNaoExistenteException(no.valor);
-        }
-        ArvoreBinariaBusca substituto = cursor.direita;
-        ArvoreBinariaBusca paiMaiorDentreMenores = obterPaiMaiorDentreMenores(cursor);
-        if (paiMaiorDentreMenores != null) {
-            if (paiMaiorDentreMenores.direita != null) {
-                substituto = paiMaiorDentreMenores.direita;
-                paiMaiorDentreMenores.direita = substituto.esquerda;
-                substituto.direita = cursor.direita;
-                substituto.esquerda = cursor.esquerda;
-            } else {
-                substituto = paiMaiorDentreMenores;
+        if (existe) {
+            ArvoreBinariaBusca substituto = cursor.direita;
+            ArvoreBinariaBusca paiMaiorDentreMenores = obterPaiMaiorDentreMenores(cursor);
+            if (paiMaiorDentreMenores != null) {
+                if (paiMaiorDentreMenores.direita != null) {
+                    substituto = paiMaiorDentreMenores.direita;
+                    paiMaiorDentreMenores.direita = substituto.esquerda;
+                    substituto.direita = cursor.direita;
+                    substituto.esquerda = cursor.esquerda;
+                } else {
+                    substituto = paiMaiorDentreMenores;
+                }
             }
-        }
 
-        if (substituto != null) {
-            if (anteriorCursor.valor.equals(no.valor)) {
-                this.valor = substituto.valor;
-                this.esquerda = substituto.esquerda;
-                this.direita = substituto.direita;
-            } else if (anteriorCursor.valor > substituto.valor) {
-                anteriorCursor.esquerda = substituto;
+            if (substituto != null) {
+                if (anteriorCursor.valor.equals(no.valor)) {
+                    this.valor = substituto.valor;
+                    this.esquerda = substituto.esquerda;
+                    this.direita = substituto.direita;
+                } else if (anteriorCursor.valor > substituto.valor) {
+                    anteriorCursor.esquerda = substituto;
+                } else {
+                    anteriorCursor.direita = substituto;
+                }
             } else {
-                anteriorCursor.direita = substituto;
-            }
-        } else {
-            if (anteriorCursor.valor > no.valor) {
-                anteriorCursor.esquerda = null;
-            } else {
-                anteriorCursor.direita = null;
+                if (anteriorCursor.valor > no.valor) {
+                    anteriorCursor.esquerda = null;
+                } else {
+                    anteriorCursor.direita = null;
+                }
             }
         }
 
