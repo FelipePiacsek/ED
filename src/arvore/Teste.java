@@ -10,11 +10,7 @@ public class Teste {
         ArvoreBinariaBusca arvore = testeInsercao(100, mockContent);
         final List<ArvoreBinariaBusca> all = arvore.todos();
         Collections.reverse(all);
-        System.out.println(arvore.eRd());
-        for (ArvoreBinariaBusca a : all) {
-            arvore.remover(a);
-            System.out.println(arvore.eRd());
-        }
+        testeRemocao(arvore, all);
 
     }
 
@@ -33,5 +29,13 @@ public class Teste {
         }
         return containsAll;
 
+    }
+
+    public static void testeRemocao(ArvoreBinariaBusca arvore, List<ArvoreBinariaBusca> valores) {
+        System.out.println(arvore.eRd());
+        for (ArvoreBinariaBusca a : valores) {
+            arvore.remover(a);
+            System.out.println(arvore.eRd());
+        }
     }
 }
